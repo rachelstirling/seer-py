@@ -20,6 +20,10 @@ def download_channel_data(data_q, download_function):
     try:
         raw_data = download_function(meta_data['dataChunks.url'])
         data = raw_data.content
+        if raw_data.headers['Content-Type'] == 'text/xml':
+            print('Bad Url')
+            print(data)
+            raise ValueError('URL did not return data')
 
         try:
             if meta_data['channelGroups.compression'] == 'gzip':
@@ -74,11 +78,10 @@ def download_channel_data(data_q, download_function):
         return data
     except Exception as ex:
         print(ex)
-        print(study_id)
-        print(channel_names)
         print(meta_data['dataChunks.url'])
         print('{0:.2f}'.format(meta_data['dataChunks.time']))
-        print(meta_data)
+        print((f"https://app.seermedical.com/studies/{study_id}/data?t="
+                                                      f"{meta_data['dataChunks.time']}"))
         try:
             print(raw_data.headers)
         except Exception as ex:  # pylint: disable=broad-except

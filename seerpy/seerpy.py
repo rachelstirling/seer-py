@@ -1,8 +1,11 @@
-# Copyright 2017 Seer Medical Pty Ltd, Inc. or its affiliates. All Rights Reserved.
+"""
+Main module for querying Seer Cloud GraphQL endpoint.
 
+Copyright 2017 Seer Medical Pty Ltd, Inc. or its affiliates. All Rights Reserved.
+"""
+import json
 import math
 import time
-import json
 
 from gql import gql, Client as GQLClient
 from gql.transport.requests import RequestsHTTPTransport
@@ -16,7 +19,7 @@ from . import graphql
 
 
 class SeerConnect:  # pylint: disable=too-many-public-methods
-
+    """"""
     def __init__(self, api_url='https://api.seermedical.com', email=None, password=None):
         """Creates a GraphQL client able to interact with
             the Seer database, handling login and authorisation
@@ -339,12 +342,12 @@ class SeerConnect:  # pylint: disable=too-many-public-methods
         if study_metadata.empty:
             return pd.DataFrame(columns=['segments.id', 'chunkIndex', 'chunk_start', 'chunk_end',
                                          'chunk_url'])
-        
+
         study_metadata = study_metadata.drop_duplicates('segments.id')
         study_metadata = study_metadata[study_metadata['segments.startTime'] <= to_time]
         study_metadata = study_metadata[study_metadata['segments.startTime'] + 
                                         study_metadata['segments.duration'] >= from_time]
-        
+
         data_chunks = []
         chunk_metadata = []
         for row in zip(study_metadata['channelGroups.chunkPeriod'], 
@@ -658,7 +661,7 @@ class SeerConnect:  # pylint: disable=too-many-public-methods
         query_string = graphql.get_bookings_query_string(organisation_id, start_time, end_time)
         response = self.execute_query(query_string)
         return response['organisation']['bookings']
-    
+
     def get_all_bookings_dataframe(self, organisation_id, start_time, end_time):
         bookings_response = self.get_all_bookings(organisation_id, start_time, end_time)
         bookings = json_normalize(bookings_response).sort_index(axis=1)

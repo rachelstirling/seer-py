@@ -1,6 +1,11 @@
+"""
+Core GraphQL queries.
+"""
+from typing import List
 
 
-def get_json_list(list_of_strings, include_brackets=True):
+def get_json_list(list_of_strings: List[str], include_brackets=True):
+    """Convert a list of strings to a comma-separated string representation"""
     json_list = ', '.join('"%s"' % string for string in list_of_strings)
     if include_brackets:
         json_list = '[' + json_list + ']'
@@ -8,6 +13,7 @@ def get_json_list(list_of_strings, include_brackets=True):
 
 
 def get_string_from_list_of_dicts(list_of_dicts):
+    """Convert a list of dictionaries to a matching string representation"""
     labels_string = ''
     for d in list_of_dicts:
         labels_string += ' {'
@@ -24,9 +30,9 @@ def get_string_from_list_of_dicts(list_of_dicts):
                     labels_string += (get_json_list(d[k]) + ",")
             else:
                 labels_string += str(d[k]) + ','
-        labels_string = labels_string[:-1] # remove last comma
+        labels_string = labels_string[:-1]  # Remove last comma
         labels_string += '},'
-    labels_string = labels_string[:-1] # remove last comma
+    labels_string = labels_string[:-1]  # Remove last comma
     return labels_string
 
 
@@ -120,7 +126,7 @@ def get_labels_query_string(study_id, label_group_id,  # pylint:disable=too-many
 
 
 def get_labels_string_query_string(study_id, label_group_id,  # pylint:disable=too-many-arguments
-                            from_time, to_time):
+                                   from_time, to_time):
     return """
         query {
             study (id: "%s") {
@@ -416,6 +422,7 @@ def get_confirm_document_mutation_string(study_id, document_id):
             }
         }""" % (study_id, document_id)
 
+
 def get_bookings_query_string(organisation_id, start_time, end_time):
     return """query {
                 organisation(id: "%s") {
@@ -458,5 +465,3 @@ def get_bookings_query_string(organisation_id, start_time, end_time):
                     }
                 }
             }""" % (organisation_id, start_time, end_time)
-
-

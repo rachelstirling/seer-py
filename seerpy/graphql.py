@@ -373,6 +373,39 @@ def get_diary_labels_query_string(patient_id, label_type, limit, offset, from_ti
             }
         }""" % (patient_id, label_type, limit, offset, from_time, to_time, from_duration, to_duration)
 
+def get_diary_medication_alerts_query_string(patient_id, from_time, to_time):
+
+    return """query {
+                patient (id: "%s") {
+                    diary {
+                        id
+                        alerts {
+                            id
+                            name
+                            labels (ranges: [{ from: %.0f to: %.0f }]) {
+                                id
+                                startTime
+                                scheduledTime
+                                alert {
+                                    name   
+                                }
+                                scheduledTime
+                                startTime
+                                doses {
+                                    doseValue
+                                    doseUnit
+                                    doseExponent
+                                    medication {
+                                        brandName
+                                        drugName
+                                    }
+                                }
+                                deleted
+                            }
+                        }
+                    }
+                }
+            }""" % (patient_id, from_time, to_time)
 
 def get_diary_medication_compliance_query_string(patient_id, from_time, to_time):
 
